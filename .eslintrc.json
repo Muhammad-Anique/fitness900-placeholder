@@ -2,25 +2,35 @@
   "extends": [
     "next/core-web-vitals",
     "@typescript-eslint/recommended",
+    "plugin:jsx-a11y/recommended",
     "prettier"
   ],
   "parser": "@typescript-eslint/parser",
-  "plugins": [
-    "@typescript-eslint",
-    "prettier"
-  ],
+  "plugins": ["@typescript-eslint", "jsx-a11y", "prettier"],
+  "root": true,
+  "env": {
+    "browser": true,
+    "es2020": true,
+    "node": true
+  },
   "rules": {
     "prettier/prettier": "error",
     "@typescript-eslint/no-unused-vars": "error",
     "@typescript-eslint/no-explicit-any": "warn",
-    "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
-    "@typescript-eslint/no-empty-function": "warn",
-    "prefer-const": "error",
-    "no-var": "error"
+    "@typescript-eslint/no-non-null-assertion": "warn",
+    "jsx-a11y/anchor-is-valid": "off",
+    "jsx-a11y/click-events-have-key-events": "error",
+    "jsx-a11y/no-static-element-interactions": "error",
+    "react/no-unescaped-entities": "off",
+    "react-hooks/exhaustive-deps": "warn",
+    "no-console": "warn",
+    "no-debugger": "error"
   },
   "ignorePatterns": [
-    "next.config.js",
+    ".next",
+    "out",
+    "node_modules",
     "*.config.js"
   ]
 }
