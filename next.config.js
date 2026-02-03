@@ -1,104 +1,96 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Enable strict mode for better debugging
-  reactStrictMode: true,
-  
-  // Enable SWC minification for better performance
-  swcMinify: true,
-  
-  // Optimize images automatically
+  // Enable experimental features for better performance
+  experimental: {
+    optimizePackageImports: ['lucide-react'],
+  },
+
+  // Image optimization settings
   images: {
     formats: ['image/webp', 'image/avif'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    minimumCacheTTL: 31536000, // 1 year
   },
-  
-  // Compress responses
+
+  // Compression
   compress: true,
-  
-  // Generate static pages for better performance
-  output: 'standalone',
-  
-  // Optimize for static export (uncomment if needed for CDN deployment)
-  // output: 'export',
-  // trailingSlash: true,
-  // images: { unoptimized: true },
-  
+
   // Security headers
   async headers() {
     return [
       {
         source: '/(.*)',
         headers: [
-          // Content Security Policy
-          {
-            key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://va.vercel-scripts.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://vitals.vercel-insights.com; frame-ancestors 'none';",
-          },
-          // Prevent clickjacking
           {
             key: 'X-Frame-Options',
             value: 'DENY',
           },
-          // Prevent MIME type sniffing
           {
             key: 'X-Content-Type-Options',
             value: 'nosniff',
           },
-          // Referrer policy
           {
             key: 'Referrer-Policy',
             value: 'strict-origin-when-cross-origin',
           },
-          // Permissions policy
           {
             key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=(), browsing-topics=()',
+            value: 'camera=(), microphone=(), geolocation=()',
+          },
+          {
+            key: 'X-DNS-Prefetch-Control',
+            value: 'on',
+          },
+          {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=63072000; includeSubDomains; preload',
+          },
+          {
+            key: 'Content-Security-Policy',
+            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://vercel.live; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://vercel.live https://vitals.vercel-analytics.com;",
           },
         ],
       },
     ];
   },
-  
-  // Experimental features for performance
-  experimental: {
-    // Enable modern bundling
-    esmExternals: true,
-    
-    // Optimize CSS
-    optimizeCss: true,
-    
-    // Enable server components logging
-    logging: {
-      level: 'info',
-    },
-  },
-  
-  // Webpack customization for optimization
-  webpack: (config, { isServer }) => {
-    // Optimize bundle size
-    config.optimization = {
-      ...config.optimization,
-      splitChunks: {
-        chunks: 'all',
-        cacheGroups: {
-          default: {
-            minChunks: 1,
-            priority: -20,
-            reuseExistingChunk: true,
-          },
-          vendor: {
-            test: /[\\/]node_modules[\\/]/,
-            name: 'vendors',
-            priority: -10,
-            chunks: 'all',
-          },
-        },
+
+  // Redirects for SEO
+  async redirects() {
+    return [
+      {
+        source: '/home',
+        destination: '/',
+        permanent: true,
       },
-    };
-    
-    return config;
+      {
+        source: '/index',
+        destination: '/',
+        permanent: true,
+      },
+    ];
   },
+
+  // Performance optimizations
+  swcMinify: true,
+  poweredByHeader: false,
+  reactStrictMode: true,
+
+  // Static export configuration (uncomment for static deployment)
+  // output: 'export',
+  // trailingSlash: true,
+
+  // Bundle analyzer (enable with ANALYZE=true)
+  ...(process.env.ANALYZE === 'true' && {
+    webpack: (config) => {
+      config.plugins.push(
+        new (require('@next/bundle-analyzer'))({
+          enabled: true,
+        })
+      );
+      return config;
+    },
+  }),
 };
 
 module.exports = nextConfig;
