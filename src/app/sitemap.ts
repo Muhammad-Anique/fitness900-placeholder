@@ -1,33 +1,45 @@
-import { MetadataRoute } from 'next';
+import type { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://fitness900.com';
-  const currentDate = new Date().toISOString();
-
+  
   return [
     {
       url: baseUrl,
-      lastModified: currentDate,
+      lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 1,
     },
     {
-      url: `${baseUrl}/#about`,
-      lastModified: currentDate,
+      url: `${baseUrl}/#features`,
+      lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/#services`,
-      lastModified: currentDate,
+      url: `${baseUrl}/#about`,
+      lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.8,
     },
     {
       url: `${baseUrl}/#contact`,
-      lastModified: currentDate,
+      lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.7,
     },
+    // Add more pages as they are created
+    // {
+    //   url: `${baseUrl}/privacy`,
+    //   lastModified: new Date(),
+    //   changeFrequency: 'yearly',
+    //   priority: 0.5,
+    // },
+    // {
+    //   url: `${baseUrl}/terms`,
+    //   lastModified: new Date(),
+    //   changeFrequency: 'yearly',
+    //   priority: 0.5,
+    // },
   ];
 }
