@@ -1,23 +1,41 @@
 {
-  "version": 2,
-  "name": "fitness900-placeholder",
-  "alias": ["fitness900.com", "www.fitness900.com"],
-  "regions": ["iad1", "sfo1"],
-  "public": true,
-  "github": {
-    "enabled": true,
-    "autoAlias": true
-  },
   "buildCommand": "npm run build",
-  "outputDirectory": ".next",
-  "installCommand": "npm ci",
   "devCommand": "npm run dev",
+  "installCommand": "npm install",
   "framework": "nextjs",
+  "outputDirectory": ".next",
   "functions": {
-    "src/app/**": {
-      "runtime": "nodejs18.x"
+    "app/api/**/*.js": {
+      "maxDuration": 10
     }
   },
+  "redirects": [
+    {
+      "source": "/home",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/index",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/index.html",
+      "destination": "/",
+      "permanent": true
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/sitemap.xml",
+      "destination": "/sitemap"
+    },
+    {
+      "source": "/robots.txt",
+      "destination": "/robots"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",
@@ -45,56 +63,20 @@
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "public, immutable, no-transform, max-age=31536000"
+          "value": "public, max-age=31536000, immutable"
         }
       ]
     },
     {
-      "source": "/robots.txt",
+      "source": "/(.*\\.(js|css|jpg|jpeg|png|gif|ico|svg|woff|woff2))",
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "public, max-age=3600"
-        }
-      ]
-    },
-    {
-      "source": "/sitemap.xml",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=3600"
-        }
-      ]
-    },
-    {
-      "source": "/(.*\\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2))",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, immutable, no-transform, max-age=31536000"
+          "value": "public, max-age=31536000, immutable"
         }
       ]
     }
   ],
-  "redirects": [
-    {
-      "source": "/home",
-      "destination": "/",
-      "permanent": true
-    },
-    {
-      "source": "/index",
-      "destination": "/",
-      "permanent": true
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/sitemap.xml",
-      "destination": "/api/sitemap"
-    }
-  ],
-  "cleanUrls": true,
-  "trailingSlash": false
+  "regions": ["iad1"],
+  "crons": []
 }
