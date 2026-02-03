@@ -1,38 +1,97 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import styles from './Navigation.module.css';
 
 export default function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  // Handle scroll effect
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Handle escape key to close menu
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsMenuOpen(false);
+      }
+    };
+
+    if (isMenuOpen) {
+      document.addEventListener('keydown', handleEscape);
+      // Prevent body scroll when menu is open
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+      document.body.style.overflow = '';
+    };
+  }, [isMenuOpen]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
+
   return (
-    <nav className={styles.navigation} aria-label="Main navigation">
-      <div className="container">
-        <div className={styles.navContent}>
-          {/* Logo/Brand */}
-          <div className={styles.brand}>
-            <a href="/" className={styles.brandLink} aria-label="Fitness900 Home">
-              <span className={styles.brandText}>Fitness900</span>
-            </a>
+    <nav 
+      className={`${styles.nav} ${isScrolled ? styles.scrolled : ''}`}
+      role="navigation"
+      aria-label="Main navigation"
+    >
+      <div className="container mx-auto px-4">
+        <div className={styles.navContainer}>
+          {/* Logo */}
+          <Link 
+            href="/" 
+            className={styles.logo}
+            aria-label="Fitness900 - Home"
+          >
+            <span className={styles.logoText}>
+              Fitness<span className={styles.logoAccent}>900</span>
+            </span>
+          </Link>
+
+          {/* Desktop Navigation */}
+          <div className={styles.desktopNav} aria-label="Main menu">
+            <Link href="/" className={styles.navLink}>
+              Home
+            </Link>
+            <Link href="#features" className={styles.navLink}>
+              Features
+            </Link>
+            <Link href="#about" className={styles.navLink}>
+              About
+            </Link>
+            <Link href="#contact" className={styles.navLink}>
+              Contact
+            </Link>
           </div>
 
-          {/* Desktop Navigation Links */}
-          <div className={styles.navLinks}>
-            {/* Future navigation items can be added here */}
-            <a href="#about" className={styles.navLink}>
-              About
-            </a>
-            <a href="#services" className={styles.navLink}>
-              Services
-            </a>
-            <a href="#contact" className={styles.navLink}>
-              Contact
-            </a>
+          {/* CTA Button - Desktop */}
+          <div className={styles.ctaContainer}>
+            <Link 
+              href="#newsletter" 
+              className={styles.ctaButton}
+              aria-label="Get early access to Fitness900"
+            >
+              Get Early Access
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -41,46 +100,72 @@ export default function Navigation() {
             onClick={toggleMenu}
             aria-expanded={isMenuOpen}
             aria-controls="mobile-menu"
-            aria-label="Toggle navigation menu"
+            aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
           >
-            <span className={`${styles.hamburger} ${isMenuOpen ? styles.hamburgerOpen : ''}`}>
-              <span className={styles.hamburgerLine}></span>
-              <span className={styles.hamburgerLine}></span>
-              <span className={styles.hamburgerLine}></span>
+            <span className={styles.menuButtonInner}>
+              <span className={`${styles.menuLine} ${isMenuOpen ? styles.menuLineActive : ''}`}></span>
+              <span className={`${styles.menuLine} ${isMenuOpen ? styles.menuLineActive : ''}`}></span>
+              <span className={`${styles.menuLine} ${isMenuOpen ? styles.menuLineActive : ''}`}></span>
             </span>
           </button>
         </div>
 
         {/* Mobile Navigation Menu */}
-        <div
+        <div 
           id="mobile-menu"
           className={`${styles.mobileMenu} ${isMenuOpen ? styles.mobileMenuOpen : ''}`}
           aria-hidden={!isMenuOpen}
         >
-          <div className={styles.mobileNavLinks}>
-            <a
-              href="#about"
+          <div className={styles.mobileMenuContent}>
+            <Link 
+              href="/" 
               className={styles.mobileNavLink}
-              onClick={() => setIsMenuOpen(false)}
+              onClick={closeMenu}
+            >
+              Home
+            </Link>
+            <Link 
+              href="#features" 
+              className={styles.mobileNavLink}
+              onClick={closeMenu}
+            >
+              Features
+            </Link>
+            <Link 
+              href="#about" 
+              className={styles.mobileNavLink}
+              onClick={closeMenu}
             >
               About
-            </a>
-            <a
-              href="#services"
+            </Link>
+            <Link 
+              href="#contact" 
               className={styles.mobileNavLink}
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Services
-            </a>
-            <a
-              href="#contact"
-              className={styles.mobileNavLink}
-              onClick={() => setIsMenuOpen(false)}
+              onClick={closeMenu}
             >
               Contact
-            </a>
+            </Link>
+            <div className={styles.mobileCta}>
+              <Link 
+                href="#newsletter" 
+                className={styles.mobileCtaButton}
+                onClick={closeMenu}
+                aria-label="Get early access to Fitness900"
+              >
+                Get Early Access
+              </Link>
+            </div>
           </div>
         </div>
+
+        {/* Mobile Menu Overlay */}
+        {isMenuOpen && (
+          <div 
+            className={styles.menuOverlay}
+            onClick={closeMenu}
+            aria-hidden="true"
+          />
+        )}
       </div>
     </nav>
   );
