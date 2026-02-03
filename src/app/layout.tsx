@@ -1,83 +1,133 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
+import { Inter } from 'next/font/google';
 import './globals.css';
 
-// SEO and Meta Configuration
+const inter = Inter({ 
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+});
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: '#FF6B35',
+};
+
 export const metadata: Metadata = {
-  title: 'Fitness900 - Coming Soon',
-  description: 'Fitness900 is coming soon. Stay tuned for exciting updates and launch announcements.',
+  title: {
+    default: 'Fitness900 - Your Premier Fitness Destination',
+    template: '%s | Fitness900',
+  },
+  description: 'Discover the ultimate fitness experience at Fitness900. Professional training, modern equipment, and a supportive community to help you achieve your wellness goals.',
   keywords: [
-    'Fitness900',
     'fitness',
     'gym',
     'workout',
     'health',
+    'wellness',
+    'training',
     'exercise',
-    'coming soon',
+    'nutrition',
+    'lifestyle',
+    'fitness900',
   ],
   authors: [{ name: 'Fitness900 Team' }],
-  creator: 'Fitness900',
+  creator: 'Muhammad Anique',
   publisher: 'Fitness900',
+  
+  // Open Graph
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://fitness900.com',
+    title: 'Fitness900 - Your Premier Fitness Destination',
+    description: 'Discover the ultimate fitness experience with professional training, modern equipment, and a supportive community.',
+    siteName: 'Fitness900',
+    images: [
+      {
+        url: 'https://fitness900.com/og-image.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Fitness900 - Premium Fitness Experience',
+      },
+    ],
+  },
+  
+  // Twitter
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Fitness900 - Your Premier Fitness Destination',
+    description: 'Discover the ultimate fitness experience with professional training, modern equipment, and a supportive community.',
+    images: ['https://fitness900.com/twitter-image.jpg'],
+    creator: '@fitness900',
+  },
+  
+  // Robots
   robots: {
     index: true,
     follow: true,
+    nocache: true,
     googleBot: {
       index: true,
-      follow: true,
+      follow: false,
+      noimageindex: true,
       'max-video-preview': -1,
       'max-image-preview': 'large',
       'max-snippet': -1,
     },
   },
-  openGraph: {
-    title: 'Fitness900 - Coming Soon',
-    description: 'Fitness900 is coming soon. Stay tuned for exciting updates and launch announcements.',
-    url: 'https://fitness900.com',
-    siteName: 'Fitness900',
-    locale: 'en_US',
-    type: 'website',
-    images: [
-      {
-        url: '/images/og-image.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'Fitness900 - Coming Soon',
-      },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Fitness900 - Coming Soon',
-    description: 'Fitness900 is coming soon. Stay tuned for exciting updates and launch announcements.',
-    images: ['/images/twitter-card.jpg'],
-  },
-  verification: {
-    // Add verification codes when available
-    // google: '',
-    // yandex: '',
-    // yahoo: '',
-    // other: {},
-  },
-  alternates: {
-    canonical: 'https://fitness900.com',
-  },
+  
+  // Icons
   icons: {
     icon: '/favicon.ico',
     shortcut: '/favicon-16x16.png',
     apple: '/apple-touch-icon.png',
-    other: {
-      rel: 'apple-touch-icon-precomposed',
-      url: '/apple-touch-icon-precomposed.png',
-    },
   },
+  
+  // Manifest
   manifest: '/site.webmanifest',
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 1,
-    userScalable: false,
+  
+  // Other
+  category: 'fitness',
+  classification: 'Fitness & Wellness',
+  referrer: 'origin-when-cross-origin',
+  
+  // Verification (add your verification codes)
+  verification: {
+    google: 'your-google-verification-code',
+    yandex: 'your-yandex-verification-code',
   },
-  themeColor: '#000000',
-  colorScheme: 'dark light',
+};
+
+// Structured Data (JSON-LD)
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Fitness900',
+  description: 'Your premier destination for fitness and wellness',
+  url: 'https://fitness900.com',
+  logo: 'https://fitness900.com/logo.png',
+  sameAs: [
+    'https://facebook.com/fitness900',
+    'https://instagram.com/fitness900',
+    'https://twitter.com/fitness900',
+  ],
+  contactPoint: {
+    '@type': 'ContactPoint',
+    telephone: '+1-800-FITNESS',
+    contactType: 'customer service',
+    availableLanguage: 'English',
+  },
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'Coming Soon',
+    addressLocality: 'Your City',
+    addressRegion: 'Your State',
+    postalCode: '00000',
+    addressCountry: 'US',
+  },
 };
 
 export default function RootLayout({
@@ -86,37 +136,41 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" className={inter.variable}>
       <head>
-        {/* Preconnect to external domains for performance */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        
         {/* Structured Data */}
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              '@context': 'https://schema.org',
-              '@type': 'Organization',
-              name: 'Fitness900',
-              url: 'https://fitness900.com',
-              logo: 'https://fitness900.com/images/logo.png',
-              description: 'Fitness900 - Your fitness journey starts here',
-              sameAs: [
-                // Add social media URLs when available
-                // 'https://facebook.com/fitness900',
-                // 'https://instagram.com/fitness900',
-                // 'https://twitter.com/fitness900',
-              ],
-            }),
-          }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
+        
+        {/* Preconnect to external domains */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        
+        {/* DNS prefetch for better performance */}
+        <link rel="dns-prefetch" href="https://vercel.live" />
+        <link rel="dns-prefetch" href="https://vitals.vercel-analytics.com" />
       </head>
-      <body className="antialiased">
+      <body className="font-inter antialiased">
+        {/* Skip to main content for accessibility */}
+        <a 
+          href="#main-content" 
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-primary text-white px-4 py-2 rounded-md z-50 transition-all"
+        >
+          Skip to main content
+        </a>
+        
         <div id="root">
           {children}
         </div>
+        
+        {/* Global no-script fallback */}
+        <noscript>
+          <div className="noscript-banner">
+            <p>This website requires JavaScript to function properly. Please enable JavaScript in your browser.</p>
+          </div>
+        </noscript>
       </body>
     </html>
   );
